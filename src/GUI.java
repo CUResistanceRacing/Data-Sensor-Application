@@ -58,6 +58,7 @@ public class GUI {
 	    menuBar.add(fileMenu);
 	    menuBar.add(elementMenu);
 	    menuBar.add(helpMenu);
+	    System.out.println("hello");
 
 	    // Populating the menu bar code goes here
 	    frame.setJMenuBar(menuBar);
