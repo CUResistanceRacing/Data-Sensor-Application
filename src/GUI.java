@@ -60,7 +60,7 @@ public class GUI {
 	    saveAsItem = new JMenuItem("Save As"); saveAsItem.addActionListener(new MenuBarListener());
 	    openItem = new JMenuItem("Open"); openItem.addActionListener(new MenuBarListener());
 	    openDefItem = new JMenuItem("Open Default"); openDefItem.addActionListener(new MenuBarListener());
-	    quitItem = new JMenuItem("Quit"); quitItem.addActionListener(new MenuBarListener());
+	    quditItem = new JMenuItem("Quit"); quitItem.addActionListener(new MenuBarListener());
 	    
 	    saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, (java.awt.event.InputEvent.META_DOWN_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
 	    saveAsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, (java.awt.event.InputEvent.SHIFT_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
