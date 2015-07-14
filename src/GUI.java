@@ -69,7 +69,7 @@ public class GUI {
 	    
 	    fileMenu.add(saveItem); fileMenu.add(saveAsItem); fileMenu.add(openItem);
 	    fileMenu.add(openDefItem); fileMenu.addSeparator(); fileMenu.add(quitItem);
-	    
+	    sd
 	    JMenu elementMenu = new JMenu("Elements");
 	    JMenu helpMenu = new JMenu("Help");
 	    
