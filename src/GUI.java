@@ -54,7 +54,6 @@ public class GUI {
 
 	    // Setting up the JMenuBar
 	    JMenuBar menuBar = new JMenuBar();
-	    
 	    JMenu fileMenu = new JMenu("File");
 	    
 	    saveItem = new JMenuItem("Save"); saveItem.addActionListener(new MenuBarListener());
