@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-//import javax.swing.ImageIcon;
+// import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JLabel;
@@ -18,9 +18,9 @@ import javax.swing.KeyStroke;
 
 // For JFileChooser
 import javax.swing.JFileChooser;
-import java.io.File;   
+import java.io.File;  
 
-import java.io.*;
+// For LiveGraph
 
 /**
  * @author sachethhegde
@@ -29,19 +29,23 @@ import java.io.*;
 public class GUI {
 	static JMenuItem saveItem, saveAsItem, openItem, openDefItem, quitItem;
 	static JFileChooser fc;
-	
-	/**
-	 * Constructor
-	 */
-	public GUI () {
-		
-	}
+	static File configFile;
 
 	/**
 	 * Entry point main method
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		//Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });   
+	}
+	
+	public static void createAndShowGUI() {		
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "My Application");
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
 		
@@ -51,9 +55,18 @@ public class GUI {
 	    frame.setSize(160, 144);
 	    frame.setLocationRelativeTo(null);
 	    frame.setIgnoreRepaint(true);
-
-	    // Setting up the JMenuBar
-	    JMenuBar menuBar = new JMenuBar();
+	      
+	    JMenuBar menuBar = createMenuBar();
+	    frame.setJMenuBar(menuBar);
+	    
+	    frame.setVisible(true);
+	    
+	    fc = new JFileChooser();
+	    fc.setCurrentDirectory(new File(System.getProperty("user.home")));
+	}
+	
+	public static JMenuBar createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
 	    JMenu fileMenu = new JMenu("File");
 	    
 	    saveItem = new JMenuItem("Save"); saveItem.addActionListener(new MenuBarListener());
@@ -77,37 +90,28 @@ public class GUI {
 	    menuBar.add(elementMenu);
 	    menuBar.add(helpMenu);
 	    
-	    JLabel text = new JLabel ("Settings and Elements");
-
-	    frame.setJMenuBar(menuBar);
-	    
-	    frame.add(text);
-	    frame.setVisible(true);
-	    
-	    fc = new JFileChooser();
-	    fc.setCurrentDirectory(new File(System.getProperty("user.home")));
+	    return (menuBar);
 	}
 	
 	/**
 	 * Static inner class MenuBarListener is used to listen to events of the default
 	 * MenuBar that is used for the program.
 	 */
-	static class MenuBarListener implements ActionListener {
+	public static class MenuBarListener implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
 			if (e.getSource() == openItem) {
-				int returnVal = fc.showOpenDialog(new JFrame());
-
-				 
-	            if (returnVal == JFileChooser.APPROVE_OPTION) {
+				
+				int returnVal = fc.showOpenDialog(new JFrame());			 
+	            
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
 	                File file = fc.getSelectedFile();
 	                //This is where a real application would open the file.
 	                System.out.println ("Opening: " + file.getName() + "." );
-	            } else {
-	                System.out.println("Open command cancelled by user.");
-	            }
-				
-			} else if (e.getSource() == openDefItem) {
+	            } 				
+			} 
+			
+			else if (e.getSource() == openDefItem) {
 				/* Open configurations here */
 			}
 			
