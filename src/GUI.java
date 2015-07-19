@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 // import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
-import javax.swing.JLabel;
+//import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
@@ -29,7 +29,6 @@ import java.io.File;
 public class GUI {
 	static JMenuItem saveItem, saveAsItem, openItem, openDefItem, quitItem;
 	static JFileChooser fc;
-	static File configFile;
 
 	/**
 	 * Entry point main method
@@ -45,6 +44,9 @@ public class GUI {
         });   
 	}
 	
+	/** 
+	 * Calls submethods to create the GUI and sets up configurations
+	 */
 	public static void createAndShowGUI() {		
 		System.setProperty("com.apple.mrj.application.apple.menu.about.name", "My Application");
 		System.setProperty("apple.laf.useScreenMenuBar", "true");
@@ -65,6 +67,10 @@ public class GUI {
 	    fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 	}
 	
+	/**
+	 * Creates the JMenuBar to be used in the application
+	 * @return JMenuBar object to be used in the application
+	 */
 	public static JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 	    JMenu fileMenu = new JMenu("File");
@@ -105,16 +111,48 @@ public class GUI {
 				int returnVal = fc.showOpenDialog(new JFrame());			 
 	            
 				if (returnVal == JFileChooser.APPROVE_OPTION) {
-	                File file = fc.getSelectedFile();
-	                //This is where a real application would open the file.
-	                System.out.println ("Opening: " + file.getName() + "." );
+	                File configFile = fc.getSelectedFile();
+	                
+	                System.out.println ("Saving: " + configFile.getName() + "." );
+	                startConfigs(configFile);
 	            } 				
 			} 
 			
 			else if (e.getSource() == openDefItem) {
-				/* Open configurations here */
+				File configFile = new File("def_configFile.graphConfig");
+                System.out.println ("Using default configuration file.");
+                startConfigs (configFile);
 			}
 			
+			else if (e.getSource() == saveItem) {
+				
+			}
+			
+			else if (e.getSource() == saveAsItem) {
+				
+			}
 		}
+	}
+	
+	/**
+	 * Uses the config File and opens up the 
+	 * @param configFile
+	 * @return void
+	 */
+	public static void startConfigs (File configFile) {
+		// Open configs file 
+		
+		
+		// Start DataConnectionManager 
+		
+		
+		// Create  a list of VisualDisplay Objects using the config file
+		
+		
+		// Pass this to the VisualDisplayManager class (inner class), or make a method to determine a location on the screen, only thing for now
+		
+		
+		// Get return statement of location of objects on screen / let the inner method/class do that itself
+		
 	}
 }
