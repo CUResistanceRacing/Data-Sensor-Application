@@ -3,6 +3,7 @@
  */
 
 // Import Statements
+
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,8 +20,6 @@ import javax.swing.KeyStroke;
 // For JFileChooser
 import javax.swing.JFileChooser;
 import java.io.File;  
-
-// For LiveGraph
 
 /**
  * @author sachethhegde

@@ -23,7 +23,8 @@ public abstract class VisualDisplay {
 	}
 	
 	/**
-	 * 
+	 * Abstract method that represents the method called when a dataset is received. This method
+	 * must be overwritten with the appropriate behavior included to make data appear visually as necessary.
 	 * @param data HashMap of each of the data sets present, mapping the data-type to the value
 	 */
 	abstract void receivedDataSet (HashMap<String, Integer> data);
