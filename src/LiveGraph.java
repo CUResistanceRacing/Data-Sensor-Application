@@ -53,7 +53,7 @@ public class LiveGraph extends VisualDisplay {
 			out.setDataValue(dataSet.get(name));
 		}
 
-		// Write dataset to disk
+		// Write dataset to memory
 		out.writeDataSet();
 	}
 }

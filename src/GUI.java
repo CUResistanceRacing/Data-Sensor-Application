@@ -4,6 +4,7 @@
 
 // Import Statements
 
+// Basic GUI requirements
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +20,13 @@ import javax.swing.KeyStroke;
 
 // For JFileChooser
 import javax.swing.JFileChooser;
-import java.io.File;  
+import java.io.File; 
+
+// For serialization
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * @author sachethhegde
@@ -139,19 +146,31 @@ public class GUI {
 	 * @return void
 	 */
 	public static void startConfigs (File configFile) {
-		// Open configs file 
+		// Open configs file and save as object
+		if (!Configurations.verifyFileIntegrity(configFile)) {
+			System.out.println ("File does not fit the correct format.");
+			return;
+		}
 		
+		/*Configurations config = new Configurations(configFile);*/
 		
-		// Start DataConnectionManager 
+		// Start DataConnectionManager
+		// TODO get actual ip address 
+		DataConnectionManager dcm = new DatagramReader("");
 		
 		
 		// Create  a list of VisualDisplay Objects using the config file
 		
 		
 		// Pass this to the VisualDisplayManager class (inner class), or make a method to determine a location on the screen, only thing for now
+		// The VisualDisplayManager will also send the corresponding information to each object on the screen
 		
 		
 		// Get return statement of location of objects on screen / let the inner method/class do that itself
-		
+	
+		// TODO - figure out which function everything will actually be run
+		 // Create a start button after this
+		 // After start button is pressed, the main stuff can finally run
+		 // Make DataConnectionManager getting data periodically a thread -> gets data, feeds it to the graphs, etc.
 	}
 }
