@@ -28,5 +28,17 @@ public abstract class VisualDisplay {
 	 * @param data HashMap of each of the data sets present, mapping the data-type to the value
 	 */
 	abstract void receivedDataSet (HashMap<String, Integer> data);
+	
+	/**
+	 * Abstract method that must be called in the beginning when the application is started to
+	 * actually display the graph on the screen
+	 */
+	abstract void display();
+	
+	/** 
+	 * Abstract method that will be called after the graphing and data
+	 * sending is finished
+	 */
+	abstract void finished();
 
 }

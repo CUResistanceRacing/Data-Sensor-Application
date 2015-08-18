@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 /**
  * @author sachethhegde
  * Represents configurations for an instance of GUI
@@ -20,7 +19,7 @@ public class Configurations implements Serializable {
 		visDisplayElements = visDisElements;
 		ipAddress = ipAdd;
 	}
-	
+		
 	/**
 	 * Verifies whether this file is a correct file for configurations
 	 * @param configFile

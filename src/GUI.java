@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+
+
 // import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -20,6 +22,7 @@ import javax.swing.KeyStroke;
 
 // For JFileChooser
 import javax.swing.JFileChooser;
+
 import java.io.File; 
 
 // For serialization
@@ -27,14 +30,16 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 /**
  * @author sachethhegde
  * This class runs the application to start the graphing.
  */
 public class GUI {
-	static JMenuItem saveItem, saveAsItem, openItem, openDefItem, quitItem;
+	static JMenuItem newItem, saveItem, saveAsItem, openItem, openDefItem, quitItem;
 	static JFileChooser fc;
+	static String configFile;
 
 	/**
 	 * Entry point main method
@@ -81,17 +86,20 @@ public class GUI {
 		JMenuBar menuBar = new JMenuBar();
 	    JMenu fileMenu = new JMenu("File");
 	    
+	    newItem = new JMenuItem("New"); newItem.addActionListener(new MenuBarListener());
 	    saveItem = new JMenuItem("Save"); saveItem.addActionListener(new MenuBarListener());
 	    saveAsItem = new JMenuItem("Save As"); saveAsItem.addActionListener(new MenuBarListener());
 	    openItem = new JMenuItem("Open"); openItem.addActionListener(new MenuBarListener());
 	    openDefItem = new JMenuItem("Open Default"); openDefItem.addActionListener(new MenuBarListener());
 	    quitItem = new JMenuItem("Quit"); quitItem.addActionListener(new MenuBarListener());
 	    
+	    newItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, (java.awt.event.InputEvent.META_DOWN_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
 	    saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, (java.awt.event.InputEvent.META_DOWN_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
 	    saveAsItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, (java.awt.event.InputEvent.SHIFT_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
 	    openItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, (java.awt.event.InputEvent.META_DOWN_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
 	    quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, (java.awt.event.InputEvent.META_DOWN_MASK | (Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()))));
 	    
+	    fileMenu.add(newItem);
 	    fileMenu.add(saveItem); fileMenu.add(saveAsItem); fileMenu.add(openItem);
 	    fileMenu.add(openDefItem); fileMenu.addSeparator(); fileMenu.add(quitItem);
 	    
@@ -112,7 +120,12 @@ public class GUI {
 	public static class MenuBarListener implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
-			if (e.getSource() == openItem) {
+			
+			if (e.getSource() == newItem) {
+				Configurations config = createConfigs();				
+			} 
+			
+			else if (e.getSource() == openItem) {
 				
 				int returnVal = fc.showOpenDialog(new JFrame());			 
 	            
@@ -130,11 +143,13 @@ public class GUI {
                 startConfigs (configFile);
 			}
 			
+			// Requires saving the configuration file
 			else if (e.getSource() == saveItem) {
 				
 			}
 			
 			else if (e.getSource() == saveAsItem) {
+				// Open file-chooser dialog and choose a place to put the new config file
 				
 			}
 		}
@@ -145,22 +160,21 @@ public class GUI {
 	 * @param configFile
 	 * @return void
 	 */
-	public static void startConfigs (File configFile) {
+	public static void startConfigs (Configurations config) {
 		// Open configs file and save as object
-		if (!Configurations.verifyFileIntegrity(configFile)) {
-			System.out.println ("File does not fit the correct format.");
-			return;
-		}
-		
-		/*Configurations config = new Configurations(configFile);*/
+//		if (!Configurations.verifyFileIntegrity(configFile)) {
+//			System.out.println ("File does not fit the correct format.");
+//			return;
+//		}
+//		
+//		Configurations config = new Configurations(configFile);
 		
 		// Start DataConnectionManager
-		// TODO get actual ip address 
-		DataConnectionManager dcm = new DatagramReader("");
+		DataConnectionManager dcm = new DatagramReader(config.ipAddress);
 		
 		
 		// Create  a list of VisualDisplay Objects using the config file
-		
+		ArrayList <VisualDisplay> visDisplayElements = config.visDisplayElements;
 		
 		// Pass this to the VisualDisplayManager class (inner class), or make a method to determine a location on the screen, only thing for now
 		// The VisualDisplayManager will also send the corresponding information to each object on the screen
@@ -172,5 +186,13 @@ public class GUI {
 		 // Create a start button after this
 		 // After start button is pressed, the main stuff can finally run
 		 // Make DataConnectionManager getting data periodically a thread -> gets data, feeds it to the graphs, etc.
+	}
+	
+	/**
+	 * Creates new configurations settings using a new window that can be opened separately
+	 * @return Configurations file representing the configurations
+	 */
+	public static Configurations createConfigs () {
+		return null;
 	}
 }
