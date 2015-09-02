@@ -1,5 +1,3 @@
-import java.util.HashMap;
-
 /**
  * Resistance Racing - Data Sensor Application
  */
@@ -10,6 +8,7 @@ import java.util.HashMap;
  */
 public abstract class DataConnectionManager {
 	String ip;
+	public boolean done = false;
 
 	
 	/**
@@ -26,6 +25,13 @@ public abstract class DataConnectionManager {
 	 * @param data HashMap of each of the data sets present, mapping the data-type to the value
 	 */
 	abstract void receivedPacket (String packet);
+	
+	/**
+	 * Abstract method that represents the method called when it is time to request for a packet
+	 * to be sent over the network. It must be overwritten with the appropriate behavior to get the appropriate packets
+	 * through the network.
+	 */
+	abstract String requestPacket (); 
 	
 	/**
 	 * Abstract method that represents the method that is run when the application is first started. It

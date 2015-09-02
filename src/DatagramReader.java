@@ -27,4 +27,10 @@ public class DatagramReader extends DataConnectionManager {
 		
 	}
 
+	@Override
+	String requestPacket() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

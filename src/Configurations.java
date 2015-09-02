@@ -13,11 +13,20 @@ import java.util.ArrayList;
  */
 public class Configurations implements Serializable {
 	ArrayList <VisualDisplay> visDisplayElements;
+	ArrayList <String> colNames;
 	String ipAddress;
+	String delimiter;
+	boolean complete = false;
 	
-	public Configurations (ArrayList <VisualDisplay> visDisElements, String ipAdd) {
+	public Configurations (ArrayList <VisualDisplay> visDisElements, String ipAdd, String del) {
 		visDisplayElements = visDisElements;
 		ipAddress = ipAdd;
+		delimiter = del;
+		complete = true;
+	}
+	
+	public Configurations() {
+		
 	}
 		
 	/**

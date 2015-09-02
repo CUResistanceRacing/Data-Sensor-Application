@@ -3,7 +3,7 @@
  */
 
 // Import Statements
-import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -16,20 +16,25 @@ import java.util.HashSet;
  * 
  */
 public class ConfigurationsCreator extends JFrame{
-	static JTextField ipAddress, delimiter, colNameChooser, graphNameChooser;
-	static JComboBox colList, graphList;
+	public static JTextField ipAddress, delimiter, colNameChooser, graphNameChooser;
+	public static JComboBox colList, graphList, xCols, yCols;
 	static JButton addButton, deleteButton, addGraphButton, deleteGraphButton;
 	static ConfigurationListener listener;
+	static Configurations config;
 	static HashSet<String> colListNames, graphListNames;
-
-	// Delete later
-	private int length = 2;
+	
+	private String yes = "yes";
+	
+	static String selectedCol = "";
+	static String selectedGraph = "";
 
 	public ConfigurationsCreator() {
 		// Must be changed later, looks horrible now
-		setLayout(new FlowLayout()); 
+		setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); 
 
 		listener = new ConfigurationListener();
+		colListNames = new HashSet<String>();
+		graphListNames = new HashSet<String>();
 
 		/* Meant for the overall application settings, used for getting data */
 		/////////
@@ -39,7 +44,7 @@ public class ConfigurationsCreator extends JFrame{
 		add(new JLabel("Delimiter:")); 
 		delimiter = new JTextField(4); delimiter.setEditable(true); delimiter.addActionListener(listener); add(delimiter);
 
-		add(new JLabel("Visual Elements: " + length)); 
+		add(new JLabel("Visual Elements: " + graphListNames.size())); 
 
 		add(new JLabel("Data Columns (in order):"));
 		colList = new JComboBox(); colList.addActionListener(listener); add(colList);
@@ -59,14 +64,15 @@ public class ConfigurationsCreator extends JFrame{
 		add(new JLabel("Graph Name:"));
 		graphNameChooser = new JTextField(40); graphNameChooser.setEditable(true);  graphNameChooser.addActionListener(listener); add(graphNameChooser);  
 
-		JButton addGraphButton = new JButton("Add Graph"); addGraphButton.addActionListener(listener); add(addGraphButton);
-		JButton deleteGraphButton = new JButton("Delete Graph");  deleteGraphButton.addActionListener(listener); add(deleteButton);
+		addGraphButton = new JButton("Add Graph"); addGraphButton.addActionListener(listener); add(addGraphButton);
+		deleteGraphButton = new JButton("Delete Graph");  deleteGraphButton.addActionListener(listener); add(deleteGraphButton);
 
 		add(new JLabel("Y-Axis"));
-		JComboBox yCols = new JComboBox(); yCols.addActionListener(listener); add (yCols); 
+		yCols = new JComboBox(); yCols.addActionListener(listener); add (yCols); 
 
 		add(new JLabel("X-Axis"));
-		JComboBox xCols = new JComboBox(); xCols.addActionListener(listener); add (xCols); 
+		xCols = new JComboBox(); xCols.addActionListener(listener); add (xCols);
+		
 		/////////
 
 		setTitle("Configurations Setup");
@@ -81,12 +87,13 @@ public class ConfigurationsCreator extends JFrame{
 	public static class ConfigurationListener implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
-			
 			if (e.getSource() == addButton) {
 				String text = colNameChooser.getText();
 				if ( text != "" && !colListNames.contains(text)) {
 					colList.addItem(text);
 					colListNames.add(text);
+					yCols.addItem((Object)text);
+					xCols.addItem((Object)text);
 				}
 			}
 			
@@ -97,7 +104,35 @@ public class ConfigurationsCreator extends JFrame{
 					graphListNames.add(text);
 				}
 			}
+			
+			else if (e.getSource() == colList) {
+				selectedCol = (String) colList.getSelectedItem();
+				System.out.println(selectedCol);
+			}
+			
+			else if (e.getSource() == graphList) {
+				selectedGraph = (String) graphList.getSelectedItem();
+				System.out.println(selectedGraph);
+			}
+			
+			else if (e.getSource() == deleteButton) {
+				System.out.println (colList.getSelectedIndex());
+				if (selectedCol != "" && colList.getSelectedIndex() != -1) {
+					colList.removeItemAt(colList.getSelectedIndex());
+				}
+			}
+			
+			else if (e.getSource() == deleteGraphButton) {
+				if (selectedGraph != "" && graphList.getSelectedIndex() != -1) {
+					graphList.removeItemAt(graphList.getSelectedIndex());
+				}
+			}
 		}
+	}
+	
+	// TODO this is for testing purposes, remove after done testing
+	public static void main (String[] args) {
+		new ConfigurationsCreator();
 	}
 
 }
