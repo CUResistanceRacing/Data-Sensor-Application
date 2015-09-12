@@ -10,12 +10,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+
 // import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 //import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 // For JFileChooser
@@ -29,7 +31,6 @@ import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -123,7 +124,8 @@ public class GUI {
 		public void actionPerformed (ActionEvent e) {
 
 			if (e.getSource() == newItem) {
-				Configurations config = createConfigs();				
+				Configurations config = createConfigs();
+				startConfigs (config);
 			} 
 
 			else if (e.getSource() == openItem) {
@@ -134,14 +136,14 @@ public class GUI {
 					File configFile = fc.getSelectedFile();
 
 					System.out.println ("Saving: " + configFile.getName() + "." );
-					startConfigs(configFile);
+					//startConfigs(configFile);
 				} 				
 			} 
 
 			else if (e.getSource() == openDefItem) {
 				File configFile = new File("def_configFile.graphConfig");
 				System.out.println ("Using default configuration file.");
-				startConfigs (configFile);
+				//startConfigs (configFile);
 			}
 
 			// Requires saving the configuration file
@@ -157,7 +159,7 @@ public class GUI {
 	}
 
 	/**
-	 * Uses the config File and opens up the 
+	 * Uses the config object and applies it for creating the live data configurations
 	 * @param configFile
 	 * @return void
 	 */
@@ -169,6 +171,7 @@ public class GUI {
 		//		}
 		//		
 		//		Configurations config = new Configurations(configFile);
+		
 
 		// Start DataConnectionManager
 		DataConnectionManager dcm = new DatagramReader(config.ipAddress);
@@ -178,9 +181,11 @@ public class GUI {
 
 		// Pass this to the VisualDisplayManager class (inner class), or make a method to determine a location on the screen, only thing for now
 		// The VisualDisplayManager will also send the corresponding information to each object on the screen
-
+		System.out.println (visDisplayElements);
 		// Get return statement of location of objects on screen / let the inner method/class do that itself
-
+		for (VisualDisplay vd : visDisplayElements) {
+			vd.display();
+		}
 		// TODO - figure out which function everything will actually be run
 		// Create a start button after this
 		// After start button is pressed, the main stuff can finally run
@@ -199,7 +204,15 @@ public class GUI {
 	 * @return Configurations file representing the configurations
 	 */
 	public static Configurations createConfigs () {
-		return null;
+		ConfigurationsCreator configCreator = new ConfigurationsCreator();
+		int result;
+		do {
+			result = JOptionPane.showConfirmDialog (null, configCreator, "Configurations setup", JOptionPane.OK_CANCEL_OPTION,
+	                JOptionPane.PLAIN_MESSAGE);
+		} while (result != 0);
+		ArrayList <VisualDisplay> visDisplayList = new ArrayList <VisualDisplay> ((configCreator.visualDisplaySet).values());
+				
+		return new Configurations (visDisplayList, configCreator.ipAddress.getText(), configCreator.delimiter.getText() );
 	}
 	
 	public static HashMap<String, Integer> initializeMap (String packet, String delimiter, ArrayList<String> colNames) {

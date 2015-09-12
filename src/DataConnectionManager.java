@@ -38,5 +38,5 @@ public abstract class DataConnectionManager {
 	 * is in charge of getting the data via network appropriately, and calling receivedPacket() after
 	 * getting it's packet information
 	 */
-	abstract void run();
+	abstract void run ();
 }

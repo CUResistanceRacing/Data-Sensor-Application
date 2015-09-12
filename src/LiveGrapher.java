@@ -29,10 +29,10 @@ public class LiveGrapher extends VisualDisplay {
 	public LiveGrapher (String graphName, ArrayList<String> colNames_list) {
 		// Save and get settings
 		dfs = new DataFileSettings();
-		dfs.setDataFile("/" + graphName + "/data.csv");
+		dfs.setDataFile( graphName + ".csv");
 		dfs.setUpdateFrequency(100);
 		
-		this.lgdfsFileName = "/" + graphName + "/" + graphName + ".lgdfs";
+		this.lgdfsFileName = graphName + ".lgdfs";
 		
 		dfs.save(lgdfsFileName);
 

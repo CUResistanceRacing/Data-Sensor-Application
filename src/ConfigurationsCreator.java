@@ -10,34 +10,36 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import java.util.HashSet;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * @author sachethhegde
  * 
  */
-public class ConfigurationsCreator extends JFrame{
+public class ConfigurationsCreator extends JPanel {
 	public static JTextField ipAddress, delimiter, colNameChooser, graphNameChooser;
-	public static JComboBox colList, graphList, xCols, yCols;
-	static JButton addButton, deleteButton, addGraphButton, deleteGraphButton;
+	public static JComboBox <String> colList, graphList, xCols, yCols;
+	static JButton addButton, deleteButton, addGraphButton, deleteGraphButton, setColumns;
 	static ConfigurationListener listener;
-	static Configurations config;
 	static HashSet<String> colListNames, graphListNames;
 	
-	private String yes = "yes";
+	static HashMap <String, VisualDisplay> visualDisplaySet;
 	
 	static String selectedCol = "";
 	static String selectedGraph = "";
 
 	public ConfigurationsCreator() {
-		// Must be changed later, looks horrible now
-		setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); 
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); 
 
 		listener = new ConfigurationListener();
 		colListNames = new HashSet<String>();
 		graphListNames = new HashSet<String>();
-
+		
+		/* ------------------------------------------------------------------- */
 		/* Meant for the overall application settings, used for getting data */
-		/////////
+		/* ------------------------------------------------------------------- */
+		
 		add(new JLabel("IP Address:")); 
 		ipAddress = new JTextField(40); ipAddress.setEditable(true); ipAddress.addActionListener(listener); add(ipAddress);               
 
@@ -54,10 +56,11 @@ public class ConfigurationsCreator extends JFrame{
 
 		addButton = new JButton("Add"); addButton.addActionListener(listener); add(addButton);
 		deleteButton = new JButton("Delete"); deleteButton.addActionListener(listener); add(deleteButton);
-		/////////
 
+		/* ------------------------------------------------------------------------------------------- */
 		/* Meant for specific visual display settings, used for getting data. Just for graphs for now. */
-		/////////
+		/* ------------------------------------------------------------------------------------------- */
+		
 		add(new JLabel("Graph Selection:"));
 		graphList = new JComboBox(); graphList.addActionListener(listener); add (graphList);
 
@@ -73,15 +76,15 @@ public class ConfigurationsCreator extends JFrame{
 		add(new JLabel("X-Axis"));
 		xCols = new JComboBox(); xCols.addActionListener(listener); add (xCols);
 		
-		/////////
-
-		setTitle("Configurations Setup");
+		setColumns = new JButton("Set Columns"); setColumns.addActionListener(listener); add(setColumns);
+		visualDisplaySet = new HashMap <String, VisualDisplay> ();
+		
 		setSize(350, 100);
 		setVisible(true);   
 	}
 
 	public ConfigurationsCreator(Configurations configs) {
-
+		new ConfigurationsCreator();
 	}
 	
 	public static class ConfigurationListener implements ActionListener {
@@ -92,8 +95,8 @@ public class ConfigurationsCreator extends JFrame{
 				if ( text != "" && !colListNames.contains(text)) {
 					colList.addItem(text);
 					colListNames.add(text);
-					yCols.addItem((Object)text);
-					xCols.addItem((Object)text);
+					yCols.addItem(text);
+					xCols.addItem(text);
 				}
 			}
 			
@@ -127,12 +130,51 @@ public class ConfigurationsCreator extends JFrame{
 					graphList.removeItemAt(graphList.getSelectedIndex());
 				}
 			}
+			
+			else if (e.getSource() == xCols) {
+//				if (updateGraphSettings()) {
+//					
+//				}
+			}
+			
+			else if (e.getSource() == yCols) {
+//				if (updateGraphSettings()) {
+//					
+//				}
+			}
+			
+			else if (e.getSource() == setColumns) {
+				if (selectedGraph != "") {
+					if ( (String)(xCols.getSelectedItem()) != ""  && (String)(yCols.getSelectedItem()) != "") {
+						if (visualDisplaySet.containsKey(selectedGraph)) {
+							ArrayList <String> colNames = new ArrayList <String> ();
+							colNames.add((String)xCols.getSelectedItem());
+							colNames.add((String)yCols.getSelectedItem());
+ 							((LiveGrapher)(visualDisplaySet.get(selectedGraph))).colNames = colNames;
+						}
+						
+						else {
+							ArrayList <String> colNames = new ArrayList <String> ();
+							colNames.add((String)xCols.getSelectedItem());
+							colNames.add((String)yCols.getSelectedItem());
+							LiveGrapher lg = new LiveGrapher (selectedGraph, colNames);
+							visualDisplaySet.put((String) selectedGraph, lg);
+						}
+					}
+				}
+				
+				System.out.println (visualDisplaySet);
+			}
 		}
 	}
 	
+	
 	// TODO this is for testing purposes, remove after done testing
 	public static void main (String[] args) {
-		new ConfigurationsCreator();
+		ConfigurationsCreator a = new ConfigurationsCreator();
+		int result = JOptionPane.showConfirmDialog (null, a, "Configurations setup", JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE);
+		System.out.println (result);
 	}
 
 }
