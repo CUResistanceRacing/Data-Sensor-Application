@@ -164,14 +164,6 @@ public class GUI {
 	 * @return void
 	 */
 	public static void startConfigs (Configurations config) {
-		// Open configs file and save as object
-		//		if (!Configurations.verifyFileIntegrity(configFile)) {
-		//			System.out.println ("File does not fit the correct format.");
-		//			return;
-		//		}
-		//		
-		//		Configurations config = new Configurations(configFile);
-		
 
 		// Start DataConnectionManager
 		DataConnectionManager dcm = new DatagramReader(config.ipAddress);
@@ -181,7 +173,6 @@ public class GUI {
 
 		// Pass this to the VisualDisplayManager class (inner class), or make a method to determine a location on the screen, only thing for now
 		// The VisualDisplayManager will also send the corresponding information to each object on the screen
-		System.out.println (visDisplayElements);
 		// Get return statement of location of objects on screen / let the inner method/class do that itself
 		for (VisualDisplay vd : visDisplayElements) {
 			vd.display();
@@ -191,7 +182,7 @@ public class GUI {
 		// After start button is pressed, the main stuff can finally run
 		// Make DataConnectionManager getting data periodically a thread -> gets data, feeds it to the graphs, etc.
 		while (!dcm.done) {
-			String packet = dcm.requestPacket();
+			String packet = dcm.run();
 			HashMap<String, Integer> dataMap = initializeMap (packet, config.delimiter, config.colNames);
 			for (VisualDisplay element : visDisplayElements) {
 				element.receivedDataSet(dataMap);

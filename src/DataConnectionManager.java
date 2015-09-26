@@ -20,23 +20,16 @@ public abstract class DataConnectionManager {
 	}
 	
 	/**
-	 * Abstract method that represents the method called when a dataset is received. This method
-	 * must be overwritten with the appropriate behavior included to make data appear visually as necessary.
-	 * @param data HashMap of each of the data sets present, mapping the data-type to the value
-	 */
-	abstract void receivedPacket (String packet);
-	
-	/**
 	 * Abstract method that represents the method called when it is time to request for a packet
 	 * to be sent over the network. It must be overwritten with the appropriate behavior to get the appropriate packets
 	 * through the network.
 	 */
-	abstract String requestPacket (); 
+	abstract String requestAndReceivePacket (); 
 	
 	/**
 	 * Abstract method that represents the method that is run when the application is first started. It
 	 * is in charge of getting the data via network appropriately, and calling receivedPacket() after
 	 * getting it's packet information
 	 */
-	abstract void run ();
+	abstract String run ();
 }
