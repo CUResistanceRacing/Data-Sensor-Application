@@ -3,16 +3,15 @@
  */
 
 // Import Statements
-import java.io.File;  
-import java.io.Serializable;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
  * @author sachethhegde
  * Represents configurations for an instance of GUI
  */
-public class Configurations implements Serializable {
-	transient ArrayList <VisualDisplay> visDisplayElements;
+public class Configurations {
+	ArrayList <VisualDisplay> visDisplayElements;
 	ArrayList <String> colNames;
 	String delimiter;
 	boolean complete = false;

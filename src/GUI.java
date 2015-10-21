@@ -24,15 +24,22 @@ import javax.swing.KeyStroke;
 import javax.swing.JFileChooser;
 
 import java.io.File; 
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 
-// For serialization
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
+
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+//import java.io.FileOutputStream;
+//import java.io.ObjectOutputStream;
+//import java.io.Serializable;
+//
+//// For serialization
+//import java.io.FileInputStream;
+//import java.io.ObjectInputStream;
+//import java.io.FileOutputStream;
+//import java.io.ObjectOutputStream;
+
 import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -147,18 +154,6 @@ public class GUI {
 			if (e.getSource() == newItem) {
 				Configurations config = createConfigs();
 				if (config != null) { 
-					System.out.println ("Delete later");
-					try { 
-						FileOutputStream fout = new FileOutputStream("config.lgconfig");
-						ObjectOutputStream oos = new ObjectOutputStream(fout);   
-						oos.writeObject(config);
-						oos.close();
-						System.out.println("Done");
-					} catch (Exception ee) {
-						
-						ee.printStackTrace();
-						System.out.println ("Could not write to file.");
-					}
 					startConfigs (config);
 				}
 			} 
@@ -251,6 +246,19 @@ public class GUI {
 		if (result != 0) {
 			return null;
 		}
+		System.out.println ("Delete later");
+//		try { 
+//			FileOutputStream fout = new FileOutputStream("configgg.lgconfig");
+//			ObjectOutputStream oos = new ObjectOutputStream(fout);   
+//			oos.writeObject(configCreator);
+//			oos.close();
+//			System.out.println("Done");
+//		} catch (Exception ee) {
+//			ee.printStackTrace();
+//			System.out.println ("Could not write to file.");
+//		}
+//		
+		
 		
 		ArrayList <VisualDisplay> visDisplayList = new ArrayList <VisualDisplay> ((configCreator.visualDisplaySet).values());
 		ArrayList <String> colList = new ArrayList <String> (configCreator.colListNames);
