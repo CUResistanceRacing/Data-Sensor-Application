@@ -10,11 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-
+import javax.swing.BorderFactory;
 // import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
-//import javax.swing.JLabel;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -24,6 +24,9 @@ import javax.swing.KeyStroke;
 import javax.swing.JFileChooser;
 
 import java.io.File; 
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 // For serialization
 import java.io.FileInputStream;
@@ -33,6 +36,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author sachethhegde
@@ -73,8 +78,24 @@ public class GUI {
 
 		JMenuBar menuBar = createMenuBar();
 		frame.setJMenuBar(menuBar);
+		
+		String address = "";
+		try {
+			address = (java.net.InetAddress.getLocalHost()).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		JLabel ipAddLabel = new JLabel ();
+		ipAddLabel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+		ipAddLabel.setText("Local Address: '" + address + "'");
+		ipAddLabel.setVisible(true);
 
+		frame.add(ipAddLabel);
+		frame.pack();
 		frame.setVisible(true);
+		frame.revalidate();
+		frame.repaint();
 
 		fc = new JFileChooser();
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -119,13 +140,27 @@ public class GUI {
 	 * Static inner class MenuBarListener is used to listen to events of the default
 	 * MenuBar that is used for the program.
 	 */
-	public static class MenuBarListener implements ActionListener {
+	public static class MenuBarListener implements ActionListener  {
 
 		public void actionPerformed (ActionEvent e) {
 
 			if (e.getSource() == newItem) {
 				Configurations config = createConfigs();
-				startConfigs (config);
+				if (config != null) { 
+					System.out.println ("Delete later");
+					try { 
+						FileOutputStream fout = new FileOutputStream("config.lgconfig");
+						ObjectOutputStream oos = new ObjectOutputStream(fout);   
+						oos.writeObject(config);
+						oos.close();
+						System.out.println("Done");
+					} catch (Exception ee) {
+						
+						ee.printStackTrace();
+						System.out.println ("Could not write to file.");
+					}
+					startConfigs (config);
+				}
 			} 
 
 			else if (e.getSource() == openItem) {
@@ -166,7 +201,7 @@ public class GUI {
 	public static void startConfigs (Configurations config) {
 
 		// Start DataConnectionManager
-		DataConnectionManager dcm = new DatagramReader(config.ipAddress);
+		DataConnectionManager dcm = new DatagramReader();
 
 		// Create  a list of VisualDisplay Objects using the config file
 		ArrayList <VisualDisplay> visDisplayElements = config.visDisplayElements;
@@ -174,21 +209,34 @@ public class GUI {
 		// Pass this to the VisualDisplayManager class (inner class), or make a method to determine a location on the screen, only thing for now
 		// The VisualDisplayManager will also send the corresponding information to each object on the screen
 		// Get return statement of location of objects on screen / let the inner method/class do that itself
+		
 		for (VisualDisplay vd : visDisplayElements) {
-			vd.display();
+	        vd.display();
+	        System.out.println("Done executing.");
 		}
+		
 		// TODO - figure out which function everything will actually be run
 		// Create a start button after this
 		// After start button is pressed, the main stuff can finally run
 		// Make DataConnectionManager getting data periodically a thread -> gets data, feeds it to the graphs, etc.
-		while (!dcm.done) {
-			String packet = dcm.run();
-			HashMap<String, Integer> dataMap = initializeMap (packet, config.delimiter, config.colNames);
-			for (VisualDisplay element : visDisplayElements) {
-				element.receivedDataSet(dataMap);
-			}
-		}
-	}	
+			
+		ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+		executorService.execute(new Runnable() {
+		    public void run() {
+		    	while (!dcm.done) {
+		    		System.out.println("yee");
+					String packet = dcm.run();
+					System.out.println (packet);
+					HashMap<String, Double> dataMap = initializeMap (packet, config.delimiter, config.colNames);
+					for (VisualDisplay element : visDisplayElements) {
+			    		System.out.println("yee");
+						element.receivedDataSet(dataMap);
+					}
+				}
+		    }
+		});
+	}
 
 	/**
 	 * Creates new configurations settings using a new window that can be opened separately
@@ -197,23 +245,26 @@ public class GUI {
 	public static Configurations createConfigs () {
 		ConfigurationsCreator configCreator = new ConfigurationsCreator();
 		int result;
-		do {
 			result = JOptionPane.showConfirmDialog (null, configCreator, "Configurations setup", JOptionPane.OK_CANCEL_OPTION,
 	                JOptionPane.PLAIN_MESSAGE);
-		} while (result != 0);
-		ArrayList <VisualDisplay> visDisplayList = new ArrayList <VisualDisplay> ((configCreator.visualDisplaySet).values());
-				
-		return new Configurations (visDisplayList, configCreator.ipAddress.getText(), configCreator.delimiter.getText() );
-	}
-	
-	public static HashMap<String, Integer> initializeMap (String packet, String delimiter, ArrayList<String> colNames) {
-		StringTokenizer st = new StringTokenizer(packet, delimiter);
-		HashMap<String, Integer> toReturn = new HashMap<String, Integer> ();
-		
-		for (String column : colNames) {
-			toReturn.put(column, Integer.valueOf(st.nextToken()));
+			System.out.println (result);
+		if (result != 0) {
+			return null;
 		}
 		
+		ArrayList <VisualDisplay> visDisplayList = new ArrayList <VisualDisplay> ((configCreator.visualDisplaySet).values());
+		ArrayList <String> colList = new ArrayList <String> (configCreator.colListNames);
+
+		return new Configurations (visDisplayList, configCreator.delimiter.getText(), colList );
+	}
+	
+	public static HashMap<String, Double> initializeMap (String text, String delimiter, ArrayList<String> colNames) {
+		StringTokenizer st = new StringTokenizer(text, delimiter);
+		HashMap<String, Double> toReturn = new HashMap<String, Double> ();
+
+		for (String column : colNames) {
+			toReturn.put(column, Double.valueOf(st.nextToken()));
+		}
 		return toReturn;
 	}
 }

@@ -27,7 +27,7 @@ public abstract class VisualDisplay {
 	 * must be overwritten with the appropriate behavior included to make data appear visually as necessary.
 	 * @param data HashMap of each of the data sets present, mapping the data-type to the value
 	 */
-	abstract void receivedDataSet (HashMap<String, Integer> data);
+	abstract void receivedDataSet (HashMap<String, Double> data);
 	
 	/**
 	 * Abstract method that must be called in the beginning when the application is started to

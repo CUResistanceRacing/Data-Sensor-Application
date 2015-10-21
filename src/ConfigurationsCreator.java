@@ -4,6 +4,7 @@
 
 // Import Statements
 import javax.swing.BoxLayout;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,22 +13,23 @@ import javax.swing.*;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * @author sachethhegde
  * 
  */
 public class ConfigurationsCreator extends JPanel {
-	public static JTextField ipAddress, delimiter, colNameChooser, graphNameChooser;
-	public static JComboBox <String> colList, graphList, xCols, yCols;
-	static JButton addButton, deleteButton, addGraphButton, deleteGraphButton, setColumns;
+	public static JTextField /*ipAddress,*/ delimiter/*, colNameChooser*/, graphNameChooser, colList, yCols;
+	public static JComboBox <String>  graphList;
+	static JButton /*addButton, deleteButton,*/ setColumnsButton, addGraphButton, deleteGraphButton, setGraphValues;
 	static ConfigurationListener listener;
 	static HashSet<String> colListNames, graphListNames;
 	
 	static HashMap <String, VisualDisplay> visualDisplaySet;
 	
-	static String selectedCol = "";
-	static String selectedGraph = "";
+	//static String selectedCol = "";
+	//static String selectedGraph = "";
 
 	public ConfigurationsCreator() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); 
@@ -37,25 +39,20 @@ public class ConfigurationsCreator extends JPanel {
 		graphListNames = new HashSet<String>();
 		
 		/* ------------------------------------------------------------------- */
-		/* Meant for the overall application settings, used for getting data */
+		/* Meant for the overall application settings, used for getting data   */
 		/* ------------------------------------------------------------------- */
 		
-		add(new JLabel("IP Address:")); 
-		ipAddress = new JTextField(40); ipAddress.setEditable(true); ipAddress.addActionListener(listener); add(ipAddress);               
+		//add(new JLabel("IP Address:")); 
+		//ipAddress = new JTextField(40); ipAddress.setEditable(true); ipAddress.addActionListener(listener); add(ipAddress);               
 
 		add(new JLabel("Delimiter:")); 
 		delimiter = new JTextField(4); delimiter.setEditable(true); delimiter.addActionListener(listener); add(delimiter);
 
-		add(new JLabel("Visual Elements: " + graphListNames.size())); 
-
-		add(new JLabel("Data Columns (in order):"));
-		colList = new JComboBox(); colList.addActionListener(listener); add(colList);
-
-		add(new JLabel("Column Name:"));
-		colNameChooser = new JTextField(4); colNameChooser.setEditable(true); colNameChooser.addActionListener(listener); add(colNameChooser);
-
-		addButton = new JButton("Add"); addButton.addActionListener(listener); add(addButton);
-		deleteButton = new JButton("Delete"); deleteButton.addActionListener(listener); add(deleteButton);
+		add(new JLabel("Data Columns (enter in order, separated with '+'):"));
+		//colList = new JComboBox(); colList.addActionListener(listener); add(colList);
+		colList = new JTextField(40); colList.setEditable(true); colList.addActionListener(listener); add(colList);
+		
+		setColumnsButton = new JButton("Set Columns"); setColumnsButton.addActionListener(listener); add(setColumnsButton);		
 
 		/* ------------------------------------------------------------------------------------------- */
 		/* Meant for specific visual display settings, used for getting data. Just for graphs for now. */
@@ -70,13 +67,10 @@ public class ConfigurationsCreator extends JPanel {
 		addGraphButton = new JButton("Add Graph"); addGraphButton.addActionListener(listener); add(addGraphButton);
 		deleteGraphButton = new JButton("Delete Graph");  deleteGraphButton.addActionListener(listener); add(deleteGraphButton);
 
-		add(new JLabel("Y-Axis"));
-		yCols = new JComboBox(); yCols.addActionListener(listener); add (yCols); 
-
-		add(new JLabel("X-Axis"));
-		xCols = new JComboBox(); xCols.addActionListener(listener); add (xCols);
+		add(new JLabel("Graph Columns (separated with '+'):"));
+		yCols = new JTextField(40); yCols.setEditable(true);  yCols.addActionListener(listener); add(yCols);  
 		
-		setColumns = new JButton("Set Columns"); setColumns.addActionListener(listener); add(setColumns);
+		setGraphValues = new JButton("Set Graph Values"); setGraphValues.addActionListener(listener); add(setGraphValues);
 		visualDisplaySet = new HashMap <String, VisualDisplay> ();
 		
 		setSize(350, 100);
@@ -87,16 +81,24 @@ public class ConfigurationsCreator extends JPanel {
 		new ConfigurationsCreator();
 	}
 	
+	public static HashSet<String> tokenizeString (String text, String delimiter) {
+		StringTokenizer st = new StringTokenizer(text, delimiter);
+		HashSet<String> toReturn = new HashSet<String> ();
+
+		while (st.hasMoreTokens()) {
+			toReturn.add(st.nextToken());
+		}
+		
+		return toReturn;
+	}
+	
 	public static class ConfigurationListener implements ActionListener {
 
 		public void actionPerformed (ActionEvent e) {
-			if (e.getSource() == addButton) {
-				String text = colNameChooser.getText();
+			if (e.getSource() == setColumnsButton) {
+				String text = colList.getText();
 				if ( text != "" && !colListNames.contains(text)) {
-					colList.addItem(text);
-					colListNames.add(text);
-					yCols.addItem(text);
-					xCols.addItem(text);
+					colListNames = tokenizeString(text, "+");
 				}
 			}
 			
@@ -108,30 +110,30 @@ public class ConfigurationsCreator extends JPanel {
 				}
 			}
 			
-			else if (e.getSource() == colList) {
+			/*else if (e.getSource() == colList) {
 				selectedCol = (String) colList.getSelectedItem();
 				System.out.println(selectedCol);
-			}
+			}*/
 			
-			else if (e.getSource() == graphList) {
+			/*else if (e.getSource() == graphList) {
 				selectedGraph = (String) graphList.getSelectedItem();
-				System.out.println(selectedGraph);
-			}
+			}*/
 			
-			else if (e.getSource() == deleteButton) {
+			/*else if (e.getSource() == deleteButton) {
 				System.out.println (colList.getSelectedIndex());
 				if (selectedCol != "" && colList.getSelectedIndex() != -1) {
 					colList.removeItemAt(colList.getSelectedIndex());
 				}
-			}
+			}*/
 			
 			else if (e.getSource() == deleteGraphButton) {
+				String selectedGraph = (String)graphList.getSelectedItem();
 				if (selectedGraph != "" && graphList.getSelectedIndex() != -1) {
 					graphList.removeItemAt(graphList.getSelectedIndex());
 				}
 			}
 			
-			else if (e.getSource() == xCols) {
+			/*else if (e.getSource() == xCols) {
 //				if (updateGraphSettings()) {
 //					
 //				}
@@ -141,25 +143,24 @@ public class ConfigurationsCreator extends JPanel {
 //				if (updateGraphSettings()) {
 //					
 //				}
-			}
+			}*/
 			
-			else if (e.getSource() == setColumns) {
-				if (selectedGraph != "") {
-					if ( (String)(xCols.getSelectedItem()) != ""  && (String)(yCols.getSelectedItem()) != "") {
-						if (visualDisplaySet.containsKey(selectedGraph)) {
-							ArrayList <String> colNames = new ArrayList <String> ();
-							colNames.add((String)xCols.getSelectedItem());
-							colNames.add((String)yCols.getSelectedItem());
- 							((LiveGrapher)(visualDisplaySet.get(selectedGraph))).colNames = colNames;
-						}
-						
-						else {
-							ArrayList <String> colNames = new ArrayList <String> ();
-							colNames.add((String)xCols.getSelectedItem());
-							colNames.add((String)yCols.getSelectedItem());
-							LiveGrapher lg = new LiveGrapher (selectedGraph, colNames);
-							visualDisplaySet.put((String) selectedGraph, lg);
-						}
+			else if (e.getSource() == setGraphValues) {
+				String selectedGraph = (String)graphList.getSelectedItem();
+				String graphCols = (String)yCols.getText();
+				if (selectedGraph != "" && graphCols != "") {
+					ArrayList <String> colNames = new ArrayList <String> ();
+					HashSet <String> toInsertColNames = tokenizeString (graphCols, "+");
+					for (String value : toInsertColNames) {
+						colNames.add(value);
+					}
+					
+					if (visualDisplaySet.containsKey(selectedGraph)) {
+						((LiveGrapher)(visualDisplaySet.get(selectedGraph))).colNames = colNames;
+					}
+					else {
+						LiveGrapher lg = new LiveGrapher (selectedGraph, colNames);
+						visualDisplaySet.put((String) selectedGraph, lg);
 					}
 				}
 				

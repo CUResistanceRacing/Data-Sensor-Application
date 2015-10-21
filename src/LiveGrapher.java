@@ -14,6 +14,9 @@ import org.LiveGraph.LiveGraph;
 import org.LiveGraph.dataFile.write.*;
 import org.LiveGraph.settings.*;
 
+import java.io.Serializable;
+
+
 /**
  * @author sachethhegde
  * Represents a LiveGraph object
@@ -29,8 +32,8 @@ public class LiveGrapher extends VisualDisplay {
 	public LiveGrapher (String graphName, ArrayList<String> colNames_list) {
 		// Save and get settings
 		dfs = new DataFileSettings();
-		dfs.setDataFile( graphName + ".csv");
-		dfs.setUpdateFrequency(100);
+		dfs.setDataFile( graphName + ".lgdat");
+		dfs.setUpdateFrequency(1000);
 		
 		this.lgdfsFileName = graphName + ".lgdfs";
 		
@@ -56,7 +59,7 @@ public class LiveGrapher extends VisualDisplay {
 	}
 
 	@Override
-	public void receivedDataSet (HashMap <String,Integer> dataSet) {
+	public void receivedDataSet (HashMap <String,Double> dataSet) {
 
 		// Set datavalues
 		for (String name: colNames) {
@@ -71,12 +74,14 @@ public class LiveGrapher extends VisualDisplay {
 			out.getIOException().printStackTrace();
 			out.resetIOException();
 		}
+		try { out.wait(100); } catch (Exception e) {};
 	}
 
 	@Override
 	void display() {
 		LiveGraph app = LiveGraph.application();
 		app.exec(new String[] {"-dfs", lgdfsFileName});
+		
 	}
 	
 	@Override

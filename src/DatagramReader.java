@@ -11,8 +11,8 @@ import java.io.*;
  */
 public class DatagramReader extends DataConnectionManager {
 
-	public DatagramReader (String ip) {
-		super(ip);
+	public DatagramReader () {
+		super();
 	}
 
 	@Override
@@ -26,12 +26,16 @@ public class DatagramReader extends DataConnectionManager {
 		byte[] buf = new byte[256];
 		
 		try {
-			InetAddress address = InetAddress.getByName(ip);
-			DatagramSocket socket = new DatagramSocket();
+			String localName = java.net.InetAddress.getLocalHost().getHostName();
+
+			InetAddress address = InetAddress.getByName(localName);
+			DatagramSocket socket = new DatagramSocket(11111, InetAddress.getByName("0.0.0.0"));
+		       socket.setBroadcast(true);
 			DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 4445);
 			socket.send(packet);
 			packet = new DatagramPacket(buf, buf.length);
 			socket.receive(packet);
+			socket.close();
 			return( new String(packet.getData(), 0, packet.getLength()));
 
 		} catch (IOException e) {

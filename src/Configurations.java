@@ -12,17 +12,16 @@ import java.util.ArrayList;
  * Represents configurations for an instance of GUI
  */
 public class Configurations implements Serializable {
-	ArrayList <VisualDisplay> visDisplayElements;
+	transient ArrayList <VisualDisplay> visDisplayElements;
 	ArrayList <String> colNames;
-	String ipAddress;
 	String delimiter;
 	boolean complete = false;
 	
-	public Configurations (ArrayList <VisualDisplay> visDisElements, String ipAdd, String del) {
+	public Configurations (ArrayList <VisualDisplay> visDisElements, String del, ArrayList <String> colNamesList) {
 		visDisplayElements = visDisElements;
-		ipAddress = ipAdd;
 		delimiter = del;
 		complete = true;
+		colNames = colNamesList;
 	}
 	
 	public Configurations() {

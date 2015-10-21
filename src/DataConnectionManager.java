@@ -7,7 +7,6 @@
  * Manages getting the data from the corresponding address, using Datagrams
  */
 public abstract class DataConnectionManager {
-	String ip;
 	public boolean done = false;
 
 	
@@ -15,8 +14,7 @@ public abstract class DataConnectionManager {
 	 * Constructor used to initialize a dataConnectionManager instance
 	 * @param ipAddress - IP Address to get on the network connection
 	 */
-	public DataConnectionManager (String ipAddress) {
-		ip = ipAddress;
+	public DataConnectionManager () {
 	}
 	
 	/**
