@@ -27,8 +27,6 @@ import java.io.File;
 
 
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 //import java.io.FileOutputStream;
 //import java.io.ObjectOutputStream;
 //import java.io.Serializable;
@@ -220,12 +218,9 @@ public class GUI {
 		executorService.execute(new Runnable() {
 		    public void run() {
 		    	while (!dcm.done) {
-		    		System.out.println("yee");
 					String packet = dcm.run();
-					System.out.println (packet);
 					HashMap<String, Double> dataMap = initializeMap (packet, config.delimiter, config.colNames);
 					for (VisualDisplay element : visDisplayElements) {
-			    		System.out.println("yee");
 						element.receivedDataSet(dataMap);
 					}
 				}
@@ -244,6 +239,7 @@ public class GUI {
 	                JOptionPane.PLAIN_MESSAGE);
 			System.out.println (result);
 		if (result != 0) {
+			System.out.println("AYY");
 			return null;
 		}
 		System.out.println ("Delete later");
@@ -257,12 +253,12 @@ public class GUI {
 //			ee.printStackTrace();
 //			System.out.println ("Could not write to file.");
 //		}
-//		
+//				
+
 		
 		
 		ArrayList <VisualDisplay> visDisplayList = new ArrayList <VisualDisplay> ((configCreator.visualDisplaySet).values());
 		ArrayList <String> colList = new ArrayList <String> (configCreator.colListNames);
-
 		return new Configurations (visDisplayList, configCreator.delimiter.getText(), colList );
 	}
 	
